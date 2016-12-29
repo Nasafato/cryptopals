@@ -49,13 +49,35 @@ def get_likeliest_keysizes(data, number=1):
     return results[:number]
 
 def breakup_blocks(data, keysize):
+    blocks = []
+    index = 0
+    extra_bytes = len(data) % keysize
+    while index < len(data):
+        prev_index = index
+        index += keysize
+        blocks.append(data[prev_index:index])
+
+    # make sure the last block is equal to the last block of the data
+    if extra_bytes == 0:
+        assert blocks[-1] == data[-keysize:]
+
+    print("{} blocks: {} extra bytes: data is {} bytes on keysize {}".format(len(blocks), extra_bytes, len(data), keysize))
+    return [bytes(b'asdf')]
+
+def transpose_blocks(blocks, keysize):
+    return [bytes(b'asdf')]
+
+def get_single_byte_keys(tranposed_blocks):
+    return b'asdf'
+
 
 def get_likeliest_keys(data, potential_keysizes):
     keys = []
-    for result in potential_keysizes():
+    pprint.pprint(potential_keysizes)
+    for result in potential_keysizes[:1]:
         keysize = result.size
         blocks = breakup_blocks(data, keysize)
-        transposed_blocks = tranpose_blocks(blocks, keysize)
+        transposed_blocks = transpose_blocks(blocks, keysize)
         single_byte_keys = get_single_byte_keys(transposed_blocks)
         keys.append(bytes(single_byte_keys))
 
@@ -68,6 +90,7 @@ def main():
 
     likeliest_keysizes = get_likeliest_keysizes(data, number=3)
     likeliest_keys = get_likeliest_keys(data, likeliest_keysizes)
+    print(likeliest_keys)
 
 
 

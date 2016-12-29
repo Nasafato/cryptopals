@@ -31,6 +31,7 @@ def base64encode(byte_array):
     num_bytes = len(byte_array)
     num_bits = 8 * num_bytes
 
+
     code_index = 0
     bits_counted = 0
     for index in range(num_bits):
@@ -66,8 +67,7 @@ def test_base64(b_array, solution):
     return True
 
 def main():
-    hex_string = \
-        b"49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
+    hex_string = b"49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
 
     # test_string = "abc"
     # binary_string = ''.join(format(ord(c), '08b') for c in test_string)
@@ -85,7 +85,9 @@ def main():
     if not test_base64(binascii.unhexlify(hex_string), final_result):
         print("ERROR: final base64 encoding test failed")
 
-main()
+
+if __name__ == "__main__":
+    main()
 
 
 
