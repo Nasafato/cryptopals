@@ -1,9 +1,13 @@
 # https://cryptopals.com/sets/1/challenges/6
 # The big daddy of Set 1
-from challenge1 import get_bit_in_byte
+from challenge1 import get_bit_in_byte, base64decode
 import pprint
 import array
 from collections import namedtuple
+from challenge4 import get_likeliest_key_msg
+from challenge5 import decrypt_with_key
+import sys
+import cProfile
 
 LikelyKeysize = namedtuple("LikelyKeysize", "size normalizedDistance")
 
@@ -93,8 +97,14 @@ def transpose_blocks(blocks, keysize):
 
     return transposed_blocks
 
-def get_single_byte_keys(tranposed_blocks):
-    return b'asdf'
+def get_single_byte_keys(transposed_blocks):
+    # results = []
+    # for block in transposed_blocks:
+    #     results.append(get_likeliest_key_msg(block))
+
+    return [get_likeliest_key_msg(block).key for block in transposed_blocks]
+
+
 
 
 def get_likeliest_keys(data, potential_keysizes):
@@ -109,17 +119,20 @@ def get_likeliest_keys(data, potential_keysizes):
 
     return keys
 
-def main():
+def main(maxKeysize=40):
     test_hamming_distance()
     with open("c6.txt", "rb") as f:
         data = f.read()
 
-    likeliest_keysizes = get_likeliest_keysizes(data, number=3)
-    likeliest_keys = get_likeliest_keys(data, likeliest_keysizes)
-    print(likeliest_keys)
 
 
+
+    # likeliest_keysizes = get_likeliest_keysizes(data, number=3)
+    # likeliest_keys = get_likeliest_keys(data, likeliest_keysizes)
+    # for key in likeliest_keys:
+        # print(key)
 
 
 if __name__ == "__main__":
+    # cProfile.run('main()')
     main()

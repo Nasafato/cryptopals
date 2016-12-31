@@ -30,6 +30,9 @@ def encrypt_with_key(key, message):
 def gen(n):
     return b"ICE"
 
+def decrypt_with_key(key, ciphertext):
+    return encrypt_with_key(key, ciphertext)
+
 def main():
     message = b"Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
     result = encrypt_with_key(gen(3), message)

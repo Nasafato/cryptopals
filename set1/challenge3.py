@@ -10,7 +10,7 @@
 
 import string
 import binascii
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 
 Result = namedtuple("Result", "chiSquared key string")
 
@@ -29,17 +29,22 @@ def score(message):
     score = 0
     char_count = [0 for i in range(len(FREQS))]
     ascii_plus_space = string.ascii_lowercase + " "
-    ignored_table = {}
+    ignored_table = defaultdict(int)
+    upperA = ord(b'A')
+    upperZ = ord(b'Z')
+    lowerZ = ord(b'a')
+    lowerA = ord(b'z')
+    space = ord(b' ')
 
     for c in message:
-        if 'A' <= c <= 'Z':
-            char_count[ord(c) - ord('A')] += 1
-        elif 'a' <= c <= 'z':
-            char_count[ord(c) - ord('a')] += 1
-        elif c == ' ':
+        if upperA <= c <= upperZ:
+            char_count[c - upperA] += 1
+        elif lowerA <= c <= lowerZ:
+            char_count[c - lowerA] += 1
+        elif c == space:
             char_count[-1] += 1
         else:
-            ignored_table[c] = ignored_table.get(c, 0) + 1
+            ignored_table[c] += 1
 
     ignored_count = ignored_table.values()
     total = sum(char_count) + sum(ignored_count)
@@ -50,7 +55,7 @@ def score(message):
         chi_squared += difference * difference / expected
 
     for index, count in enumerate(ignored_count):
-        expected = 1.0 / total
+        expected = .01 / total
         difference = count - expected
         chi_squared += difference * difference / expected
 
@@ -62,7 +67,7 @@ def get_likeliest_key_msg(b_array):
     for c in range(0xff):
         key_byte_array = bytearray([c] * len(b_array))
         output = [x ^ y for x, y in zip(b_array, key_byte_array)]
-        output_string = "".join(chr(a) for a in output)
+        output_string = bytes(output)
         output_score = score(output_string)
         candidates.append(Result(output_score, c, output_string))
 
@@ -75,15 +80,6 @@ def main():
 
     result = get_likeliest_key_msg(b)
     print(result)
-    # print(score("This is a message"))
-    # print(score("1asdf ad    123      4baba1108a908"))
-    # print(score("55134=z})z631?z;z*5/4>z5<z8;954"))
-
-
-
-
-    # print(binascii.unhexlify("".join(output)))
-
 
 if __name__ == "__main__":
     main()
