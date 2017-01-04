@@ -36,6 +36,7 @@ def decrypt_with_key(key, ciphertext):
 def main():
     message = b"Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
     result = encrypt_with_key(gen(3), message)
+    print(decrypt_with_key(b"ICE", result))
     assert binascii.hexlify(result) == ANSWER
 
 if __name__ == "__main__":

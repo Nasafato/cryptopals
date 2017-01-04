@@ -6,8 +6,7 @@ import array
 from collections import namedtuple
 from challenge4 import get_likeliest_key_msg
 from challenge5 import decrypt_with_key
-import sys
-import cProfile
+import base64
 
 LikelyKeysize = namedtuple("LikelyKeysize", "size normalizedDistance")
 
@@ -121,17 +120,20 @@ def get_likeliest_keys(data, potential_keysizes):
 
 def main(maxKeysize=40):
     test_hamming_distance()
-    with open("c6.txt", "rb") as f:
-        data = f.read()
+    with open("c6.txt", "r") as f:
+        # data = f.read()
+        lines = [line.strip().encode('ascii') for line in f.readlines()]
 
+    data = b"\n".join(lines)
+    print(base64.b64decode(data))
+    # data = base64decode(data)
+    data = base64.b64decode(data)
 
-
-
-    # likeliest_keysizes = get_likeliest_keysizes(data, number=3)
-    # likeliest_keys = get_likeliest_keys(data, likeliest_keysizes)
-    # for key in likeliest_keys:
-        # print(key)
-
+    likeliest_keysizes = get_likeliest_keysizes(data, number=3)
+    likeliest_keys = get_likeliest_keys(data, likeliest_keysizes)
+    for key in likeliest_keys:
+        msg = decrypt_with_key(key, data)
+        print(msg)
 
 if __name__ == "__main__":
     # cProfile.run('main()')
