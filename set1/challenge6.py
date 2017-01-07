@@ -97,7 +97,7 @@ def transpose_blocks(blocks, keysize):
     return transposed_blocks
 
 def get_single_byte_keys(transposed_blocks):
-    # results = []
+    results = []
     # for block in transposed_blocks:
     #     results.append(get_likeliest_key_msg(block))
 
